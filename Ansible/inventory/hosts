@@ -1,0 +1,13 @@
+# Splunk IDS Project Inventory
+# Region: ap-northeast-1 (Tokyo)
+
+[splunk_server]
+splunk ansible_host=<public-ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/key.pem
+
+[clients]
+client1 ansible_host=<public-ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/key.pem
+client2 ansible_host=<public-ip> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/key.pem
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+splunk_server_private_ip=<splunk-server-private-ip>

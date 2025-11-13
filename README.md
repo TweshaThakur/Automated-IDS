@@ -21,14 +21,10 @@ A production-ready Security Information and Event Management (SIEM) solution usi
 - [Dashboard](#-dashboard)
 - [Setup & Installation](#-setup--installation)
 - [Testing Results](#-testing-results)
-- [Screenshots](#-screenshots)
 - [Learning Outcomes](#-learning-outcomes)
 - [Challenges & Solutions](#-challenges--solutions)
-- [Future Enhancements](#-future-enhancements)
 - [Contributing](#-contributing)
-- [License](#-license)
-- [Author](#-author)
-- [Acknowledgements](#-acknowledgements)
+
 
 ---
 
@@ -70,7 +66,7 @@ This project demonstrates practical skills directly applicable to Security Opera
                     │                     │ Port 9997 │
                     │  ┌──────────────┐  │           │        ┌─────────────┐
                     │  │ Client 2     │  │           │        │             │
-                    │  │ (t2.micro)   │──┼──────────▶│────▶   │  Security   │
+                    │  │ (t2.micro)   │──┼           │        │  Security   │
                     │  │ + Forwarder  │  │           │        │  Analyst    │
                     │  └──────────────┘  │           │        │             │
                     │                     │           │        └─────────────┘
@@ -156,12 +152,8 @@ This project demonstrates practical skills directly applicable to Security Opera
 
 ## 📁 Project Structure
 ```
-splunk-ssh-ids/
-│
-├── README.md                          # This file
-├── .gitignore                         # Exclude sensitive files
-│
-├── ansible/                           # Infrastructure automation
+- Use the attack script from any system having distinct outisde of the security groups
+- ├── ansible/                           # Infrastructure automation
 │   ├── ansible.cfg                    # Ansible configuration
 │   ├── inventory/
 │   │   ├── hosts.example              # Inventory template
@@ -182,39 +174,9 @@ splunk-ssh-ids/
 │   └── files/
 │       ├── inputs.conf                # Forwarder input config
 │       └── outputs.conf               # Forwarder output config
-│
-├── scripts/
-│   ├── webhook_receiver.py            # Flask webhook for alerts
-│   └── simulate_attack.sh             # Attack simulation script
-│
-├── splunk-queries/
-│   ├── detection_rules.spl            # All detection queries
-│   ├── dashboard_panels.spl           # Dashboard panel queries
-│   └── field_extractions.spl          # Custom field extractions
-│
-├── docs/
-│   ├── PROJECT_REPORT.md              # Detailed project report
-│   ├── ARCHITECTURE.md                # Architecture deep-dive
-│   ├── SETUP_GUIDE.md                 # Step-by-step setup
-│   └── TROUBLESHOOTING.md             # Common issues & fixes
-│
-├── screenshots/                       # Project screenshots
-│   ├── dashboard-full-view.png
-│   ├── detection-query-results.png
-│   ├── triggered-alerts.png
-│   ├── attack-timeline.png
-│   ├── aws-infrastructure.png
-│   └── ansible-deployment.png
-│
-├── diagrams/                          # Architecture diagrams
-│   ├── system-architecture.png
-│   ├── data-flow.png
-│   ├── network-topology.png
-│   └── detection-logic.png
-│
-└── LICENSE                            # MIT License
+have this folder on your Ansible master
+and can include the wbehook reciever if using the enterprise version, since i used the free version i did not implement it.
 ```
-
 ---
 
 ## 🔍 Detection Rules

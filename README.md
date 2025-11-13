@@ -452,14 +452,7 @@ ansible-playbook playbooks/setup_forwarders.yml
 - Sets Splunk Server as destination
 - Starts forwarder services
 
-**Duration:** ~5 minutes
 
-#### **Step 6: Access Splunk Web UI**
-```
-URL: http://YOUR_SPLUNK_PUBLIC_IP:8000
-Username: admin
-Password: splunkadmin
-```
 
 #### **Step 7: Configure Detection Rules**
 
@@ -526,27 +519,6 @@ For comprehensive setup instructions, see [SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
 - Zero false positives
 - Average detection latency: 8 minutes
 - Dashboard updated in real-time
-
-### **System Performance**
-
-**Splunk Server (t2.large):**
-- CPU Usage: 15-25% average
-- Memory Usage: 3.5 GB / 8 GB (44%)
-- Disk I/O: Minimal
-- Network: <1 Mbps
-
-**Client Servers (t2.micro):**
-- Forwarder CPU: <5%
-- Forwarder Memory: ~100 MB
-- No noticeable performance impact
-
-**Log Volume:**
-- Events indexed: ~500/day per server
-- Data volume: 1-2 MB/day
-- Index size: ~5 MB (24 hours)
-- Forwarder reliability: 100% uptime
-
----
 
 ## 📸 Screenshots
 
@@ -615,28 +587,6 @@ For comprehensive setup instructions, see [SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
 - Incident detection and response
 - False positive minimization
 
-#### **Scripting & Development**
-- Python scripting for webhook receivers
-- Bash scripting for automation
-- Regular expressions for log parsing
-- API integration concepts
-
-### **Cybersecurity Concepts Applied**
-
-- **Defense in Depth:** Multiple layers of security controls
-- **Least Privilege:** Restricted security group access
-- **Monitoring & Logging:** Comprehensive audit trail
-- **Incident Response:** Rapid threat detection and blocking
-- **Threat Intelligence:** Understanding attacker TTPs (Tactics, Techniques, Procedures)
-- **Security Automation:** Reducing response time through orchestration
-
-### **Soft Skills Enhanced**
-
-- **Problem Solving:** Troubleshooting complex technical issues
-- **Documentation:** Creating clear technical documentation
-- **Project Management:** Breaking down large projects into phases
-- **Attention to Detail:** Configuration accuracy and security considerations
-- **Research Skills:** Learning new tools and technologies independently
 
 ---
 
@@ -700,96 +650,7 @@ For comprehensive setup instructions, see [SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
 
 **Lesson Learned:** Test regex against diverse log samples, not just one example
 
----
 
-## 🚀 Future Enhancements
-
-### **Phase 1: Full Automation (High Priority)**
-
-**Upgrade to Splunk Enterprise License**
-- Enable webhook alert actions
-- Implement automatic IP blocking
-- Email notifications to security team
-- Integration with ticketing systems (Jira, ServiceNow)
-
-**Estimated Effort:** 1 week
-
----
-
-### **Phase 2: Machine Learning Integration**
-
-**Splunk Machine Learning Toolkit (MLTK)**
-- Anomaly detection for unusual login patterns
-- Behavioral analysis of user accounts
-- Predictive analytics for attack forecasting
-- Reduce false positives with ML models
-
-**Estimated Effort:** 2-3 weeks
-
----
-
-### **Phase 3: Expanded Monitoring**
-
-**Additional Log Sources**
-- Web server logs (Apache/Nginx access and error logs)
-- Application logs (custom apps, databases)
-- System logs (syslog, kernel messages)
-- AWS CloudTrail for API activity
-- VPC Flow Logs for network traffic
-
-**Estimated Effort:** 2 weeks
-
----
-
-### **Phase 4: Threat Intelligence Integration**
-
-**External Threat Feeds**
-- Integration with AlienVault OTX
-- AbuseIPDB reputation checking
-- Emerging Threats feeds
-- Automatic blocking of known malicious IPs
-- Threat actor attribution
-
-**Estimated Effort:** 1 week
-
----
-
-### **Phase 5: Advanced Response Orchestration**
-
-**SOAR Integration**
-- Phantom/SOAR platform integration
-- Automated playbook execution
-- Multi-step response workflows
-- Incident enrichment and tracking
-- Compliance reporting automation
-
-**Estimated Effort:** 3-4 weeks
-
----
-
-### **Phase 6: Enhanced Visualization**
-
-**Advanced Dashboards**
-- Executive summary reports (weekly/monthly)
-- Risk scoring dashboard
-- Attack path visualization
-- Geolocation heatmaps
-- Trend analysis and forecasting
-
-**Estimated Effort:** 1 week
-
----
-
-### **Phase 7: Compliance & Reporting**
-
-**Regulatory Compliance**
-- PCI-DSS reporting templates
-- HIPAA audit trail reports
-- SOC 2 compliance dashboards
-- Automated compliance checking
-- Executive summary generation
-
-**Estimated Effort:** 2 weeks
 
 ---
 
@@ -807,55 +668,8 @@ This is a portfolio/educational project, but suggestions and improvements are we
 6. Push to branch (`git push origin feature/improvement`)
 7. Open a Pull Request
 
-### **Contribution Ideas**
-
-- Additional detection rules
-- Dashboard improvements
-- Integration with other SIEM tools
-- Performance optimizations
-- Documentation enhancements
-- Alternative cloud providers (Azure, GCP)
-
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-**Summary:**
-- ✅ Free to use, modify, and distribute
-- ✅ Commercial use allowed
-- ⚠️ Provide attribution
-- ⚠️ No warranty provided
-
----
-
-## 👤 Author
-
-**Twesha Thakur**
-
-- 🔗 GitHub: [@YourGitHubUsername](https://github.com/yourusername)
-- 💼 LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
-- 📧 Email: your.email@example.com
-- 🌐 Portfolio: [yourwebsite.com](https://yourwebsite.com)
-
-**Project Timeline:** November 2025  
-**Completion Status:** ✅ Completed  
-**Total Hours:** 15-20 hours
-
----
-
-## 🙏 Acknowledgements
-
-Special thanks to:
-
-- **Ms. Chavi Ralhan** - For invaluable guidance, mentorship, and expertise throughout this project
-- **Splunk Community** - For excellent documentation and community support
-- **Ansible Documentation** - For comprehensive guides and examples
-- **AWS** - For providing reliable cloud infrastructure
-- **Open Source Community** - For the tools and technologies that made this possible
-
----
 
 ## 📚 Additional Resources
 
@@ -865,7 +679,7 @@ Special thanks to:
 - [Setup Guide](docs/SETUP_GUIDE.md) - Step-by-step deployment instructions
 - [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common issues and solutions
 
-### **Related Projects**
+### **Related**
 - [Splunk Documentation](https://docs.splunk.com/)
 - [Ansible Best Practices](https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html)
 - [AWS Security Best Practices](https://aws.amazon.com/security/best-practices/)
@@ -910,22 +724,6 @@ If you found this project helpful or interesting, please consider giving it a st
 It helps others discover the project and motivates continued development.
 
 ---
-
-## 📞 Contact & Support
-
-Have questions or suggestions? Feel free to:
-
-- 🐛 [Open an issue](https://github.com/yourusername/splunk-ssh-ids/issues)
-- 💬 [Start a discussion](https://github.com/yourusername/splunk-ssh-ids/discussions)
-- 📧 Email me directly
-
----
-
-<div align="center">
-
-**Made with ❤️ by Twesha Thakur**
-
-*Empowering organizations through automated security monitoring*
 
 [⬆ Back to Top](#-ssh-intrusion-detection-system-with-splunk)
 

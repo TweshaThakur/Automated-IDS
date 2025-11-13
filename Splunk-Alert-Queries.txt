@@ -1,0 +1,79 @@
+
+Rule 1: SSH Brute Force Detection
+Severity: HIGH
+Schedule: Every 5 minutes
+Detects: 2+ connection attempts per minute from same IP
+
+splindex=ssh_logs sourcetype=linux_secure "Connection closed" earliest=-5m
+| rex field=_raw "(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| bucket _time span=1m
+| stats count by _time, src_ip, host
+| where count >= 2
+| eval severity="HIGH", alert_type="Brute Force"
+| sort -count
+| eval timestamp=strftime(_time, "%Y-%m-%d %H:%M:%S")
+| table timestamp, src_ip, host, count, severity, alert_type
+| rename src_ip as "Attacking IP", host as "Target Server", count as "Attempts/Min"
+
+
+
+Rule 2: Username Enumeration
+Severity: MEDIUM
+Schedule: Every 10 minutes
+Detects: 3+ different usernames tried from same IP
+
+splindex=ssh_logs sourcetype=linux_secure "invalid user" earliest=-10m
+| rex field=_raw "invalid user (?<attempted_user>\S+).+?(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats dc(attempted_user) as unique_users, values(attempted_user) as usernames, count by src_ip, host
+| where unique_users >= 3
+| eval severity=case(unique_users >= 10, "CRITICAL", unique_users >= 5, "HIGH", 1=1, "MEDIUM")
+| eval alert_type="Username Enumeration"
+| sort -unique_users
+| rename src_ip as "Attacking IP", host as "Target", unique_users as "Unique Usernames"
+
+
+
+Rule 3: Root Access Attempts
+Severity: CRITICAL
+Schedule: Every 5 minutes
+Detects: ANY root login attempt
+
+splindex=ssh_logs sourcetype=linux_secure "Connection closed" "root" earliest=-1h
+| rex field=_raw "(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats count, earliest(_time) as first_seen, latest(_time) as last_seen by src_ip, host
+| eval first_seen=strftime(first_seen, "%Y-%m-%d %H:%M:%S")
+| eval last_seen=strftime(last_seen, "%Y-%m-%d %H:%M:%S")
+| eval severity="CRITICAL", alert_type="Root Access Attempt"
+| sort -count
+| rename src_ip as "Attacking IP", host as "Target", count as "Attempts"
+
+
+
+Rule 4: Distributed Attack
+Severity: HIGH
+Schedule: Every 10 minutes
+Detects: Single IP attacking 2+ servers
+
+splindex=ssh_logs sourcetype=linux_secure "Connection closed" earliest=-10m
+| rex field=_raw "(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats dc(host) as servers_targeted, values(host) as target_list, count as total_attempts by src_ip
+| where servers_targeted >= 2
+| eval severity="HIGH", alert_type="Distributed Attack"
+| sort -total_attempts
+| rename src_ip as "Attacking IP", servers_targeted as "Servers Hit"
+
+
+
+Rule 5: High-Volume Attack
+Severity: CRITICAL
+Schedule: Every 15 minutes
+Detects: 20+ attempts in 1 hour
+
+splindex=ssh_logs sourcetype=linux_secure "Connection closed" earliest=-1h
+| rex field=_raw "(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats count by src_ip, host
+| where count >= 20
+| eval severity="CRITICAL", attack_type="Mass Brute Force"
+| sort -count
+| rename src_ip as "Attacking IP", host as "Target", count as "Total Attempts"
+

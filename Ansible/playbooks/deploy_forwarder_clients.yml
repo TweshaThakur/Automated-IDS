@@ -1,0 +1,160 @@
+---
+- name: Deploy Splunk Universal Forwarder on Client Servers
+  hosts: clients
+  become: yes
+  vars:
+    splunk_forwarder_package: "splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb"
+    splunk_home: "/opt/splunkforwarder"
+    splunk_admin_password: "your password"
+    splunk_server_ip: "private ip"
+    splunk_server_port: "9997"
+    
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      retries: 3
+      delay: 5
+      register: apt_update_result
+      until: apt_update_result is succeeded
+      ignore_errors: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - wget
+          - net-tools
+        state: present
+
+    - name: Copy Splunk Universal Forwarder package to clients
+      copy:
+        src: "../files/splunk/{{ splunk_forwarder_package }}"
+        dest: "/tmp/{{ splunk_forwarder_package }}"
+        mode: '0644'
+
+    - name: Install Splunk Universal Forwarder
+      apt:
+        deb: "/tmp/{{ splunk_forwarder_package }}"
+        state: present
+
+    - name: Create splunk user if not exists
+      user:
+        name: splunk
+        system: yes
+        home: "{{ splunk_home }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Set ownership of Splunk directory
+      file:
+        path: "{{ splunk_home }}"
+        owner: splunk
+        group: splunk
+        recurse: yes
+
+    - name: Check if Splunk forwarder is already initialized
+      stat:
+        path: "{{ splunk_home }}/var/lib/splunk/kvstore"
+      register: splunk_initialized
+
+    - name: Start Splunk forwarder and accept license (first time only)
+      command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd {{ splunk_admin_password }}"
+      become_user: splunk
+      when: not splunk_initialized.stat.exists
+      ignore_errors: yes
+
+    - name: Stop Splunk forwarder before enabling boot-start
+      command: "{{ splunk_home }}/bin/splunk stop"
+      become_user: splunk
+      ignore_errors: yes
+
+    - name: Enable boot-start for Splunk forwarder
+      command: "{{ splunk_home }}/bin/splunk enable boot-start -user splunk --accept-license --answer-yes --no-prompt"
+
+    - name: Start Splunk forwarder using systemd
+      systemd:
+        name: SplunkForwarder
+        state: started
+        enabled: yes
+
+    - name: Wait for forwarder process to stabilize
+      pause:
+        seconds: 15
+
+    - name: Verify Splunk forwarder is running
+      command: "{{ splunk_home }}/bin/splunk status"
+      become_user: splunk
+      register: splunk_status_check
+      retries: 3
+      delay: 5
+      until: splunk_status_check.rc == 0
+
+    - name: Configure forward-server (send logs to Splunk Server)
+      command: "{{ splunk_home }}/bin/splunk add forward-server {{ splunk_server_ip }}:{{ splunk_server_port }} -auth admin:{{ splunk_admin_password }}"
+      become_user: splunk
+      register: forward_server_result
+      failed_when: 
+        - forward_server_result.rc != 0
+        - "'already exists' not in forward_server_result.stderr"
+
+    - name: Configure inputs to monitor auth.log
+      command: "{{ splunk_home }}/bin/splunk add monitor /var/log/auth.log -index ssh_logs -sourcetype linux_secure -auth admin:{{ splunk_admin_password }}"
+      become_user: splunk
+      register: monitor_result
+      failed_when:
+        - monitor_result.rc != 0
+        - "'already exists' not in monitor_result.stderr"
+
+    - name: Configure inputs to monitor syslog
+      command: "{{ splunk_home }}/bin/splunk add monitor /var/log/syslog -index ssh_logs -sourcetype syslog -auth admin:{{ splunk_admin_password }}"
+      become_user: splunk
+      register: syslog_result
+      failed_when:
+        - syslog_result.rc != 0
+        - "'already exists' not in syslog_result.stderr"
+
+    - name: Restart Splunk forwarder to apply changes
+      systemd:
+        name: SplunkForwarder
+        state: restarted
+
+    - name: Wait after restart
+      pause:
+        seconds: 10
+
+    - name: Verify Splunk forwarder is running after restart
+      systemd:
+        name: SplunkForwarder
+      register: splunk_service_status
+
+    - name: Display Splunk forwarder service status
+      debug:
+        msg: "Splunk Forwarder is {{ splunk_service_status.status.ActiveState }}"
+
+    - name: Check forwarder process status
+      command: "{{ splunk_home }}/bin/splunk status"
+      become_user: splunk
+      register: splunk_status
+
+    - name: Display Splunk forwarder status
+      debug:
+        var: splunk_status.stdout_lines
+
+    - name: Check if forwarder is connected to Splunk server
+      shell: "{{ splunk_home }}/bin/splunk list forward-server -auth admin:{{ splunk_admin_password }}"
+      become_user: splunk
+      register: forward_status
+
+    - name: Display forward-server configuration
+      debug:
+        var: forward_status.stdout_lines
+
+    - name: Check monitored inputs
+      shell: "{{ splunk_home }}/bin/splunk list monitor -auth admin:{{ splunk_admin_password }}"
+      become_user: splunk
+      register: monitor_status
+
+    - name: Display monitored files
+      debug:
+        var: monitor_status.stdout_lines

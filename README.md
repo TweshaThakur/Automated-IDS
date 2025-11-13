@@ -482,39 +482,7 @@ For comprehensive setup instructions, see [SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
 - Average detection latency: 8 minutes
 - Dashboard updated in real-time
 
-## 📸 Screenshots
-
-### **Dashboard Overview**
-
-![Splunk Dashboard](screenshots/dashboard-full-view.png)
-*Real-time security dashboard showing all 9 panels with live attack data*
-
-### **Detection Query Results**
-
-![Detection Query](screenshots/detection-query-results.png)
-*SPL query results showing detected brute-force attempts from attacker IP*
-
-### **Triggered Alerts**
-
-![Triggered Alerts](screenshots/triggered-alerts.png)
-*Activity page showing all 5 detection rules successfully triggered during testing*
-
-### **Attack Timeline**
-
-![Attack Timeline](screenshots/attack-timeline.png)
-*Line chart visualization showing attack spike at 10:33 AM during simulation*
-
-### **AWS Infrastructure**
-
-![AWS EC2 Instances](screenshots/aws-infrastructure.png)
-*AWS Console showing all 3 running instances with security groups configured*
-
-### **Ansible Deployment**
-
-![Ansible Execution](screenshots/ansible-deployment.png)
-*Successful Ansible playbook execution deploying Splunk forwarders*
-
----
+## Detailed Report is also uploaded 
 
 ## 🎓 Learning Outcomes
 
@@ -663,19 +631,6 @@ This is a portfolio/educational project, but suggestions and improvements are we
 - **Documentation Pages:** 4
 - **Screenshots:** 6+
 - **Diagrams:** 4
-
----
-
-## 🏆 Project Achievements
-
-✅ Successfully deployed production-ready SIEM infrastructure  
-✅ Achieved 100% detection accuracy across all test scenarios  
-✅ Zero false positives in detection  
-✅ Automated deployment reducing setup time by 83%  
-✅ Created comprehensive documentation and visualizations  
-✅ Demonstrated practical SOC operational skills  
-✅ Showcased cloud security expertise  
-✅ Applied Infrastructure as Code principles  
 
 ---
 

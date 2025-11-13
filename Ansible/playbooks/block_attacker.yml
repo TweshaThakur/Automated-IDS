@@ -1,0 +1,19 @@
+---
+- name: Block Attacking IP
+  hosts: clients
+  become: yes
+  vars:
+    attacker_ip: "{{ ip_to_block }}"
+  
+  tasks:
+    - name: Block IP with UFW
+      ufw:
+        rule: deny
+        from_ip: "{{ attacker_ip }}"
+        comment: "Blocked by Splunk - SSH attack"
+    
+    - name: Log blocking action
+      lineinfile:
+        path: /var/log/blocked_ips.log
+        line: "{{ ansible_date_time.iso8601 }} - Blocked {{ attacker_ip }}"
+        create: yes

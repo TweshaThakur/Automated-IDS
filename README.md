@@ -4,7 +4,6 @@
 ![Platform](https://img.shields.io/badge/platform-AWS%20EC2-orange)
 ![SIEM](https://img.shields.io/badge/SIEM-Splunk%20Enterprise-green)
 ![Automation](https://img.shields.io/badge/automation-Ansible-red)
-![License](https://img.shields.io/badge/license-MIT-blue)
 
 A production-ready Security Information and Event Management (SIEM) solution using Splunk Enterprise to detect and monitor SSH brute-force attacks on AWS cloud infrastructure in real-time.
 
